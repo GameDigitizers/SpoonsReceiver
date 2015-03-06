@@ -99,25 +99,36 @@ function board(context) {
 
     var x_radius = (width - 2*x_margin) / 2;
     var y_radius = (height - 2*y_margin) / 2;
-
+    
     var avatars = [
+      "bear.png",
+      "beaver.png",
+      "bee.png",
+      "chicken.png",
       "cow.png",
+      "dog.png",
       "elephant.png",
       "giraffe.png",
+      "goat.png",
+      "hippo.png",
       "owl.png",
-      "penguin.png"
+      "penguin.png",
+      "pig.png",
+      "sheep.png",
+      "turkey.png",
+      "zebra.png"
     ];
 
     
     avatar_g.selectAll('.image')
-      .data(avatars)
+      .data(chance.shuffle(avatars))
       .enter()
         .append('svg:image')
         .attr('x', function (avatar, index) {
-          return (x_radius * Math.cos((index) / avatars.length * 2 * Math.PI)) + width/2 - x_margin;
+          return (x_radius * Math.cos((index) / avatars.length * 2 * Math.PI)) + width/2 - x_margin/2;
         })
         .attr('y', function (avatar, index) {
-          return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + height/2 - y_margin;
+          return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + height/2 - y_margin/2;
         })
         .attr('width', 50)
         .attr('height', 50)
