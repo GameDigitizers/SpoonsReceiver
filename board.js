@@ -85,18 +85,47 @@ var card_files = [
 function board(context) {
   this.mContext = context;
 
-  this.setup = function() {
+  this.setup = function () {
     console.log("SETTING UP BOARD");
 
     var svg = d3.select('svg');
     var avatar_g = svg.append('g');
 
-    avatar_g.append('svg:image')
-      .attr('x', 50)
-      .attr('y', 50)
-      .attr('width', 50)
-      .attr('height', 50)
-      .attr('xlink:href', 'images/penguin.png')
+    var x_margin = 50;
+    var y_margin = 50;
+
+    var width = svg.style('width').substr(0, svg.style('width').length - 2);
+    var height = svg.style('height').substr(0, svg.style('height').length - 2);
+
+    var x_radius = (width - 2*x_margin) / 2;
+    var y_radius = (height - 2*y_margin) / 2;
+
+    var avatars = [
+      "cow.png",
+      "elephant.png",
+      "giraffe.png",
+      "owl.png",
+      "penguin.png"
+    ];
+
+    
+    avatar_g.selectAll('.image')
+      .data(avatars)
+      .enter()
+        .append('svg:image')
+        .attr('x', function (avatar, index) {
+          return (x_radius * Math.cos(index / avatars.length * 360)) + width/2;
+        })
+        .attr('y', function (avatar, index) {
+          return (y_radius * Math.sin(index / avatars.length * 360)) + height/2;
+        })
+        .attr('width', 50)
+        .attr('height', 50)
+        .attr('xlink:href', function (avatar) {
+          return 'images/' + avatar;
+        });
+
+
   }
 
 }
