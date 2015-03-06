@@ -114,10 +114,10 @@ function board(context) {
       .enter()
         .append('svg:image')
         .attr('x', function (avatar, index) {
-          return (x_radius * Math.cos(index / avatars.length * 360)) + width/2;
+          return (x_radius * Math.cos((index) / avatars.length * 2 * Math.PI)) + width/2 - x_margin;
         })
         .attr('y', function (avatar, index) {
-          return (y_radius * Math.sin(index / avatars.length * 360)) + height/2;
+          return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + height/2 - y_margin;
         })
         .attr('width', 50)
         .attr('height', 50)
