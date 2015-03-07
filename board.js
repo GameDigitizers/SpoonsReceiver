@@ -119,6 +119,8 @@ function board(context) {
       "zebra.png"
     ];
 
+
+    var avatar_size = 75;
     
     avatar_g.selectAll('.avatar')
       .data(chance.shuffle(avatars))
@@ -131,8 +133,8 @@ function board(context) {
         .attr('y', function (avatar, index) {
           return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + height/2 - y_margin/4;
         })
-        .attr('width', 50)
-        .attr('height', 50)
+        .attr('width', avatar_size)
+        .attr('height', avatar_size)
         .attr('xlink:href', function (avatar) {
           return 'images/' + avatar;
         });
@@ -170,12 +172,12 @@ function board(context) {
 
     function caroom () {
       d3.select(this).transition()
-      .attr('transform', 'translate(' + random_x() + ',' + random_y() + ')')
-      .ease('linear')
-      .duration(function () {
-        return chance.integer({min: 1500, max: 2500});
-      })
-      .each('end', caroom);
+        .attr('transform', 'translate(' + random_x() + ',' + random_y() + ')')
+        .ease('linear')
+        .duration(function () {
+          return chance.integer({min: 1500, max: 2500});
+        })
+        .each('end', caroom);
     }
 
     function random_x () {
