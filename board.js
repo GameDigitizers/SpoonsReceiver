@@ -91,47 +91,72 @@ function board(context) {
     var svg = d3.select('svg');
     var avatar_g = svg.append('g');
 
-    var x_margin = 150;
-    var y_margin = 150;
-
+    // These are the size of the screem
     var width = $('svg').width();
     var height = $('svg').height();
 
-    var x_radius = (width - 2*x_margin) / 2;
-    var y_radius = (height - 2*y_margin) / 2;
-    
     var avatars = [
       "bear.png",
       "beaver.png",
-      "bee.png",
-      "chicken.png",
-      "cow.png",
-      "dog.png",
-      "elephant.png",
-      "giraffe.png",
-      "goat.png",
-      "hippo.png",
-      "owl.png",
-      "penguin.png",
-      "pig.png",
-      "sheep.png",
-      "turkey.png",
-      "zebra.png"
+      // "bee.png",
+      // "chicken.png",
+      // "cow.png",
+      // "dog.png",
+      // "elephant.png",
+      // "giraffe.png",
+      // "goat.png",
+      // "hippo.png",
+      // "owl.png",
+      // "penguin.png",
+      // "pig.png",
+      // "sheep.png",
+      // "turkey.png",
+      // "zebra.png"
     ];
 
+    // Margins set at 5%
+    var x_margin = width * .05;
+    var y_margin = height * .05;
 
-    var avatar_size = 75;
+    // Double the margin, and subtract from the width and height
+    var playable_area_width = width - (2 * x_margin);
+    var playable_area_height = height - (2 * y_margin);
+
+    var min_avatar_height = 125;
+    var max_avatar_height = 250;
+    // check for the maximum size
+    var avatar_size = d3.max([min_avatar_height, (playable_area_height/avatars.length)]);
+    // check for the minimum size
+    avatar_size = d3.min([avatar_size, max_avatar_height]);
     
+    // If there are a small number of players, make the avatars larger
+    // if ( (playable_area_height/avatars.length) > min_avatar_height ){
+    //   avatar_size = playable_area_height / avatars.length;    
+    // }
+
+    // This are the radii of the ellipse
+    var y_radius = (playable_area_height - avatar_size) / 2;
+    var x_radius = (playable_area_width - avatar_size) / 2;
+    
+    var ellipse= {
+      x: x_margin + (avatar_size/2) + x_radius,
+      y: y_margin + (avatar_size/2) + y_radius
+    };
+    
+
+    // make the avatars
     avatar_g.selectAll('.avatar')
       .data(chance.shuffle(avatars))
       .enter()
         .append('svg:image')
         .attr('class', 'avatar')
         .attr('x', function (avatar, index) {
-          return (x_radius * Math.cos((index) / avatars.length * 2 * Math.PI)) + width/2 - x_margin/4;
+          // x_radius * cos(Theta)
+          return (x_radius * Math.cos( (index) / avatars.length * 2 * Math.PI) ) + (width/2) - (avatar_size/2) ;
         })
         .attr('y', function (avatar, index) {
-          return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + height/2 - y_margin/4;
+          // y_radius * sin(Theta)
+          return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + (height/2) - (avatar_size/2);
         })
         .attr('width', avatar_size)
         .attr('height', avatar_size)
@@ -150,25 +175,25 @@ function board(context) {
       .append("g")
         .attr('class', 'spoon')
         .attr("transform", "translate(" + (width / 2 - 25/2) + "," + (height / 2 - 25/2) + ")")
-        .each(caroom);
+        // .each(caroom);
     
     spoon_g.append("svg:image")
         .attr('width', 30)
         .attr('height', 30)
         .attr('xlink:href', 'images/spoon.png')
-      .append('animateTransform')
-        .attr('attributeName', "transform")
-        .attr('type', "rotate")
-        .attr('from', function () {
-          return (true ? '0' : '360') + " 15 15";
-        })
-        .attr('to', function () {
-          return (true ? '360' : '0') + " 15 15";
-        })
-        .attr('dur', function () {
-          return chance.natural({min:0.5, max: 3}) + 's';
-        })
-        .attr('repeatCount', "indefinite");
+      // .append('animateTransform')
+      //   .attr('attributeName', "transform")
+      //   .attr('type', "rotate")
+      //   .attr('from', function () {
+      //     return (true ? '0' : '360') + " 15 15";
+      //   })
+      //   .attr('to', function () {
+      //     return (true ? '360' : '0') + " 15 15";
+      //   })
+      //   .attr('dur', function () {
+      //     return chance.natural({min:0.5, max: 3}) + 's';
+      //   })
+      //   .attr('repeatCount', "indefinite");
 
     function caroom () {
       d3.select(this).transition()
@@ -191,3 +216,26 @@ function board(context) {
   }
 
 }
+// Helper code
+  // // Make the center
+  // avatar_g
+  //     .append('circle')
+  //     .attr('class', 'point')
+  //     .attr('cx', ellipse.x)
+  //     .attr('cy', ellipse.y)
+  //     .attr('r', 5);
+  // // Make the circles
+  // avatar_g.selectAll('.b')
+  //   .data(avatars)
+  //   .enter()
+  //     .append('circle')
+  //     .attr('class', 'point')
+  //     .attr('cx', function (avatar, index) {
+  //       // x_radius * cos(Theta)
+  //       return (x_radius * Math.cos( (index) / avatars.length * 2 * Math.PI) ) + (width/2) ;
+  //     })
+  //     .attr('cy', function (avatar, index) {
+  //       // y_radius * sin(Theta)
+  //       return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + (height/2);
+  //     })
+  //     .attr('r', 5);
