@@ -88,6 +88,13 @@ function board(context) {
   this.setup = function () {
     console.log("SETTING UP BOARD");
 
+
+    var socket = io();
+    socket.on('chat message', function(msg){
+      console.log("CHAT MESSAGE");
+      console.log(msg);
+    });
+
     var svg = d3.select('svg');
     var avatar_g = svg.append('g');
 
