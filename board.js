@@ -158,6 +158,9 @@ function board(context) {
       .enter()
         .append('svg:image')
         .attr('class', 'avatar')
+        .attr('id', function(avatar, index) {
+          return 'player_' + index;
+        })
         .attr('x', function (avatar, index) {
           // x_radius * cos(Theta)
           return (x_radius * Math.cos( (index) / avatars.length * 2 * Math.PI) ) + (width/2) - (avatar_size/2) ;
