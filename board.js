@@ -137,30 +137,44 @@ function board(context) {
           return 'images/' + avatar;
         });
 
-    var spoon_g = svg.append("g")
+    var spoons = [];
+    for (i=0; i < avatars.length-1; i++) {
+      spoons.push({});
+    }
+
+    var spoon_g = svg.selectAll('.spoon')
+        .data(spoons)
+        .enter()
+      .append("g")
         .attr('class', 'spoon')
         .attr("transform", "translate(" + (width / 2 - 25/2) + "," + (height / 2 - 25/2) + ")")
-        .each(caroom)
+        .each(caroom);
     
-    var spoon = spoon_g.append("svg:image")
-        // .attr('x', width/2)
-        // .attr('y', height/2)
+    spoon_g.append("svg:image")
         .attr('width', 30)
         .attr('height', 30)
-        .attr('xlink:href', 'images/spoon.png');
-
-    spoon.append('animateTransform')
+        .attr('xlink:href', 'images/spoon.png')
+      .append('animateTransform')
         .attr('attributeName', "transform")
         .attr('type', "rotate")
-        .attr('from', "0 15 15")
-        .attr('to', "360 15 15")
-        .attr('dur', "2s")
+        .attr('from', function () {
+          return (true ? '0' : '360') + " 15 15";
+        })
+        .attr('to', function () {
+          return (true ? '360' : '0') + " 15 15";
+        })
+        .attr('dur', function () {
+          return chance.natural({min:0.5, max: 3}) + 's';
+        })
         .attr('repeatCount', "indefinite");
 
     function caroom () {
       d3.select(this).transition()
       .attr('transform', 'translate(' + random_x() + ',' + random_y() + ')')
-      .duration(3000)
+      .ease('linear')
+      .duration(function () {
+        return chance.integer({min: 1500, max: 2500});
+      })
       .each('end', caroom);
     }
 
