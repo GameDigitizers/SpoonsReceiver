@@ -94,8 +94,8 @@ function board(context) {
     var x_margin = 150;
     var y_margin = 150;
 
-    var width = svg.style('width').substr(0, svg.style('width').length - 2);
-    var height = svg.style('height').substr(0, svg.style('height').length - 2);
+    var width = $('svg').width();
+    var height = $('svg').height();
 
     var x_radius = (width - 2*x_margin) / 2;
     var y_radius = (height - 2*y_margin) / 2;
@@ -125,10 +125,10 @@ function board(context) {
       .enter()
         .append('svg:image')
         .attr('x', function (avatar, index) {
-          return (x_radius * Math.cos((index) / avatars.length * 2 * Math.PI)) + width/2 - x_margin/2;
+          return (x_radius * Math.cos((index) / avatars.length * 2 * Math.PI)) + width/2 - x_margin/4;
         })
         .attr('y', function (avatar, index) {
-          return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + height/2 - y_margin/2;
+          return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + height/2 - y_margin/4;
         })
         .attr('width', 50)
         .attr('height', 50)
