@@ -91,8 +91,8 @@ function board(context) {
     var svg = d3.select('svg');
     var avatar_g = svg.append('g');
 
-    var x_margin = 50;
-    var y_margin = 50;
+    var x_margin = 150;
+    var y_margin = 150;
 
     var width = svg.style('width').substr(0, svg.style('width').length - 2);
     var height = svg.style('height').substr(0, svg.style('height').length - 2);
