@@ -120,10 +120,11 @@ function board(context) {
     ];
 
     
-    avatar_g.selectAll('.image')
+    avatar_g.selectAll('.avatar')
       .data(chance.shuffle(avatars))
       .enter()
         .append('svg:image')
+        .attr('class', 'avatar')
         .attr('x', function (avatar, index) {
           return (x_radius * Math.cos((index) / avatars.length * 2 * Math.PI)) + width/2 - x_margin/4;
         })
@@ -135,6 +136,30 @@ function board(context) {
         .attr('xlink:href', function (avatar) {
           return 'images/' + avatar;
         });
+
+    var spoon_g = svg.append("g")
+        .attr('class', 'spoon')
+        .attr("transform", "translate(" + (width / 2 - 25/2) + "," + (height / 2 - 25/2) + ")")
+    
+    var spoon = spoon_g.append("svg:image")
+        // .attr('x', width/2)
+        // .attr('y', height/2)
+        .attr('width', 30)
+        .attr('height', 30)
+        .attr('xlink:href', 'images/spoon.png');
+
+    spoon.append('animateTransform')
+        .attr('attributeName', "transform")
+        .attr('type', "rotate")
+        .attr('from', "0 15 15")
+        .attr('to', "360 15 15")
+        .attr('dur', "2s")
+        .attr('repeatCount', "indefinite");
+
+    spoon_g.transition()
+      .attr('transform', 'translate(650,250)')
+      .duration(3000);
+
 
 
   }
