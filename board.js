@@ -140,6 +140,7 @@ function board(context) {
     var spoon_g = svg.append("g")
         .attr('class', 'spoon')
         .attr("transform", "translate(" + (width / 2 - 25/2) + "," + (height / 2 - 25/2) + ")")
+        .each(caroom)
     
     var spoon = spoon_g.append("svg:image")
         // .attr('x', width/2)
@@ -156,11 +157,20 @@ function board(context) {
         .attr('dur', "2s")
         .attr('repeatCount', "indefinite");
 
-    spoon_g.transition()
-      .attr('transform', 'translate(650,250)')
-      .duration(3000);
+    function caroom () {
+      d3.select(this).transition()
+      .attr('transform', 'translate(' + random_x() + ',' + random_y() + ')')
+      .duration(3000)
+      .each('end', caroom);
+    }
 
+    function random_x () {
+      return chance.integer({min: 0, max: width});
+    }
 
+    function random_y () {
+      return chance.integer({min: 0, max: height});
+    }
 
   }
 
