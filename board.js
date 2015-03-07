@@ -105,20 +105,20 @@ function board(context) {
     var avatars = [
       "bear.png",
       "beaver.png",
-      // "bee.png",
-      // "chicken.png",
-      // "cow.png",
-      // "dog.png",
-      // "elephant.png",
-      // "giraffe.png",
-      // "goat.png",
-      // "hippo.png",
-      // "owl.png",
-      // "penguin.png",
-      // "pig.png",
-      // "sheep.png",
-      // "turkey.png",
-      // "zebra.png"
+      "bee.png",
+      "chicken.png",
+      "cow.png",
+      "dog.png",
+      "elephant.png",
+      "giraffe.png",
+      "goat.png",
+      "hippo.png",
+      "owl.png",
+      "penguin.png",
+      "pig.png",
+      "sheep.png",
+      "turkey.png",
+      "zebra.png"
     ];
 
     // Margins set at 5%
@@ -131,25 +131,26 @@ function board(context) {
 
     var min_avatar_height = 125;
     var max_avatar_height = 250;
+    // adjust the avatar size based on the number of players
     // check for the maximum size
     var avatar_size = d3.max([min_avatar_height, (playable_area_height/avatars.length)]);
     // check for the minimum size
     avatar_size = d3.min([avatar_size, max_avatar_height]);
     
-    // If there are a small number of players, make the avatars larger
-    // if ( (playable_area_height/avatars.length) > min_avatar_height ){
-    //   avatar_size = playable_area_height / avatars.length;    
-    // }
-
     // This are the radii of the ellipse
     var y_radius = (playable_area_height - avatar_size) / 2;
     var x_radius = (playable_area_width - avatar_size) / 2;
+    // This are the radii of the Inner Ellipse
+    var inner_y_radius = y_radius - (avatar_size/2);
+    var inner_x_radius = x_radius - (avatar_size/2);
     
     var ellipse= {
       x: x_margin + (avatar_size/2) + x_radius,
       y: y_margin + (avatar_size/2) + y_radius
     };
     
+    var spoon_size = 30;
+    var spoon_buffer = spoon_size + 30;
 
     // make the avatars
     avatar_g.selectAll('.avatar')
@@ -182,29 +183,41 @@ function board(context) {
       .append("g")
         .attr('class', 'spoon')
         .attr("transform", "translate(" + (width / 2 - 25/2) + "," + (height / 2 - 25/2) + ")")
-        // .each(caroom);
+        .each(caroom);
     
     spoon_g.append("svg:image")
-        .attr('width', 30)
-        .attr('height', 30)
+        .attr('width', spoon_size)
+        .attr('height', spoon_size)
         .attr('xlink:href', 'images/spoon.png')
-      // .append('animateTransform')
-      //   .attr('attributeName', "transform")
-      //   .attr('type', "rotate")
-      //   .attr('from', function () {
-      //     return (true ? '0' : '360') + " 15 15";
-      //   })
-      //   .attr('to', function () {
-      //     return (true ? '360' : '0') + " 15 15";
-      //   })
-      //   .attr('dur', function () {
-      //     return chance.natural({min:0.5, max: 3}) + 's';
-      //   })
-      //   .attr('repeatCount', "indefinite");
+      .append('animateTransform')
+        .attr('attributeName', "transform")
+        .attr('type', "rotate")
+        .attr('from', function () {
+          return (true ? '0' : '360') + " 15 15";
+        })
+        .attr('to', function () {
+          return (true ? '360' : '0') + " 15 15";
+        })
+        .attr('dur', function () {
+          return chance.natural({min:0.5, max: 3}) + 's';
+        })
+        .attr('repeatCount', "indefinite");
+
+    function randomInnerPath() {
+      var theta =  chance.natural({ min:0, max:2*Math.PI });
+      str = 'translate(' +
+           // x location of a random point on the inner ellipse, accounting for spoon size and the buffer
+           ( ( (inner_x_radius - spoon_buffer) * Math.cos( theta ) ) + (width/2) - spoon_size ) +
+           ',' + 
+           // y location of a random point on the inner ellipse, accounting for spoon size and the buffer
+           ( ( (inner_y_radius - spoon_buffer) * Math.sin( theta ) ) + (height/2) - spoon_size ) +
+           ')';
+      return str;
+    };
 
     function caroom () {
       d3.select(this).transition()
-        .attr('transform', 'translate(' + random_x() + ',' + random_y() + ')')
+        .attr('transform', randomInnerPath)
         .ease('linear')
         .duration(function () {
           return chance.integer({min: 1500, max: 2500});
@@ -246,3 +259,43 @@ function board(context) {
   //       return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + (height/2);
   //     })
   //     .attr('r', 5);
+  // Make the lines
+  // Based on 0,0
+  // avatar_g
+  //   .append('line')
+  //   .attr('class', 'line')
+  //   .attr('x1', x_margin )
+  //   .attr('x2', x_margin + inner_x_radius*2 )
+  //   .attr('y1', y_margin + inner_y_radius )
+  //   .attr('y2', y_margin + inner_y_radius )
+  //   .attr('stroke', 'black' )
+  //   .attr('stroke-width', 3);
+  // avatar_g
+  //   .append('line')
+  //   .attr('class', 'line')
+  //   .attr('x1', x_margin + inner_x_radius )
+  //   .attr('x2', x_margin + inner_x_radius )
+  //   .attr('y1', y_margin )
+  //   .attr('y2', y_margin + inner_y_radius*2 )
+  //   .attr('stroke', 'black' )
+  //   .attr('stroke-width', 3);
+
+  // // Based on the center of the inner ellipsis
+  // avatar_g
+  //   .append('line')
+  //   .attr('class', 'line')
+  //   .attr('x1', ellipse.x - inner_x_radius  )
+  //   .attr('x2', ellipse.x + inner_x_radius  )
+  //   .attr('y1', ellipse.y )
+  //   .attr('y2', ellipse.y )
+  //   .attr('stroke', 'black' )
+  //   .attr('stroke-width', 3);
+  // avatar_g
+  //   .append('line')
+  //   .attr('class', 'line')
+  //   .attr('x1', ellipse.x  )
+  //   .attr('x2', ellipse.x  )
+  //   .attr('y1', ellipse.y - inner_y_radius )
+  //   .attr('y2', ellipse.y + inner_y_radius)
+  //   .attr('stroke', 'black' )
+  //   .attr('stroke-width', 3);
