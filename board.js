@@ -95,6 +95,10 @@ function board(context) {
       console.log(msg);
     });
 
+    socket.on('jump', function () {
+      jump();
+    })
+
     console.log("Waiting for connect");
     socket.on('connect', function () {
       console.log('Emitting chromecast');
