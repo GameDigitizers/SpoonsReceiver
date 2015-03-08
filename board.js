@@ -95,6 +95,16 @@ function board(context) {
       console.log(msg);
     });
 
+    socket.on('jump', function () {
+      jump();
+    })
+
+    console.log("Waiting for connect");
+    socket.on('connect', function () {
+      console.log('Emitting chromecast');
+      socket.emit('i_am_chromecast');
+    })
+
     var svg = d3.select('svg');
 
     // These are the size of the screem
