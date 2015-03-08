@@ -95,6 +95,12 @@ function board(context) {
       console.log(msg);
     });
 
+    console.log("Waiting for connect");
+    socket.on('connect', function () {
+      console.log('Emitting chromecast');
+      socket.emit('i_am_chromecast');
+    })
+
     var svg = d3.select('svg');
     var avatar_g = svg.append('g');
 
