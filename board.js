@@ -96,30 +96,29 @@ function board(context) {
     });
 
     var svg = d3.select('svg');
-    var avatar_g = svg.append('g');
 
     // These are the size of the screem
     var width = $('svg').width();
     var height = $('svg').height();
 
-    var avatars = [
-      "bear.png",
-      "beaver.png",
-      "bee.png",
-      "chicken.png",
-      "cow.png",
-      "dog.png",
-      "elephant.png",
-      "giraffe.png",
-      "goat.png",
-      "hippo.png",
-      "owl.png",
-      "penguin.png",
-      "pig.png",
-      "sheep.png",
-      "turkey.png",
-      "zebra.png"
-    ];
+    var players = [
+      { name: 'player1', avatar: 'bear.png'     },
+      { name: 'player2', avatar: 'beaver.png'   },
+      { name: 'player3', avatar: 'bee.png'      },
+      { name: 'player4', avatar: 'chicken.png'  },
+      { name: 'player5', avatar: 'cow.png'      },
+      { name: 'player6', avatar: 'dog.png'      },
+      { name: 'player7', avatar: 'elephant.png' },
+      { name: 'player8', avatar: 'giraffe.png'  },
+      { name: 'player9', avatar: 'goat.png'     },
+      { name: 'player10', avatar: 'hippo.png'    },
+      { name: 'player11', avatar: 'owl.png'      },
+      { name: 'player12', avatar: 'penguin.png'  },
+      { name: 'player13', avatar: 'pig.png'      },
+      { name: 'player14', avatar: 'sheep.png'    },
+      { name: 'player15', avatar: 'turkey.png'   },
+      { name: 'player16', avatar: 'zebra.png'    }
+    ]
 
     // Margins set at 5%
     var x_margin = width * .05;
@@ -133,7 +132,7 @@ function board(context) {
     var max_avatar_height = 250;
     // adjust the avatar size based on the number of players
     // check for the maximum size
-    var avatar_size = d3.max([min_avatar_height, (playable_area_height/avatars.length)]);
+    var avatar_size = d3.max([min_avatar_height, (playable_area_height/players.length)]);
     // check for the minimum size
     avatar_size = d3.min([avatar_size, max_avatar_height]);
     
@@ -153,30 +152,57 @@ function board(context) {
     var spoon_buffer = spoon_size + 30;
 
     // make the avatars
-    avatar_g.selectAll('.avatar')
-      .data(chance.shuffle(avatars))
+    var personSelection = svg.selectAll('.avatar')
+      .data(chance.shuffle(players))
       .enter()
-        .append('svg:image')
-        .attr('class', 'avatar')
-        .attr('id', function(avatar, index) {
-          return 'player_' + index;
-        })
-        .attr('x', function (avatar, index) {
+        .append('g')
+          .attr('class', 'person')
+
+    personSelection
+      .append('svg:image')
+      .attr('class', 'avatar')
+      .attr('id', function(player, index) {
+        return 'player_' + index;
+      })
+      .attr('x', function (player, index) {
+        // x_radius * cos(Theta)
+        return (x_radius * Math.cos( (index) / players.length * 2 * Math.PI) ) + (width/2) - (avatar_size/2) ;
+      })
+      .attr('y', function (player, index) {
+        // y_radius * sin(Theta)
+        return (y_radius * Math.sin((index) / players.length * 2 * Math.PI)) + (height/2) - (avatar_size/2);
+      })
+      .attr('width', avatar_size)
+      .attr('height', avatar_size)
+      .attr('xlink:href', function (player) {
+        return 'images/' + player.avatar;
+      })
+
+    personSelection
+      .append('g')
+        .attr('class', 'card-stack')
+
+    personSelection
+      .append('text')
+        .attr('class', 'name')
+        .attr('x', function (person, index) {
           // x_radius * cos(Theta)
-          return (x_radius * Math.cos( (index) / avatars.length * 2 * Math.PI) ) + (width/2) - (avatar_size/2) ;
+          return (x_radius * Math.cos( (index) / players.length * 2 * Math.PI) ) + (width/2) - (avatar_size/2) ;
         })
-        .attr('y', function (avatar, index) {
+        .attr('y', function (person, index) {
           // y_radius * sin(Theta)
-          return (y_radius * Math.sin((index) / avatars.length * 2 * Math.PI)) + (height/2) - (avatar_size/2);
+          return (y_radius * Math.sin((index) / players.length * 2 * Math.PI)) + (height/2) - (avatar_size/2);
         })
-        .attr('width', avatar_size)
-        .attr('height', avatar_size)
-        .attr('xlink:href', function (avatar) {
-          return 'images/' + avatar;
-        });
+        .text( function (person, index) {
+          return person.name;
+        })
+        .attr('font-family', 'sans-serif')
+        .attr('font-size', '20px')
+        .attr('fill', 'orange');
+
 
     var spoons = [];
-    for (i=0; i < avatars.length-1; i++) {
+    for (i=0; i < players.length-1; i++) {
       spoons.push({});
     }
 
