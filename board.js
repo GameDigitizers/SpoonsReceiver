@@ -164,6 +164,9 @@ function board(context) {
       .enter()
         .append('svg:image')
         .attr('class', 'avatar')
+        .attr('id', function(avatar, index) {
+          return 'player_' + index;
+        })
         .attr('x', function (avatar, index) {
           // x_radius * cos(Theta)
           return (x_radius * Math.cos( (index) / avatars.length * 2 * Math.PI) ) + (width/2) - (avatar_size/2) ;
@@ -209,7 +212,24 @@ function board(context) {
         })
         .attr('repeatCount', "indefinite");
 
-    function randomInnerPath() {
+    function jump(){
+      var jumpHeight = 30;
+      var originalY = d3.select('#player_0').attr('y');
+
+      d3.select('#player_0')
+        .transition()
+          .attr('y', originalY - jumpHeight  )    
+          .ease('linear')
+          .duration(1000)
+          .each('end',function() {          
+            d3.select(this)
+              .transition()                  
+              .attr('y', originalY )    
+              .duration(1000);         
+           });
+    };
+    
+    function randomInnerPath(){
       var theta =  chance.natural({ min:0, max:2*Math.PI });
       str = 'translate(' +
            // x location of a random point on the inner ellipse, accounting for spoon size and the buffer
